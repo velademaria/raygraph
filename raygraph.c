@@ -47,16 +47,16 @@ CartesianPlane()
             if (xescalate >= 3 || gap >= 30) DrawText(TextFormat("%.0f", j), i - gap*xescalate + 1, 0, fontSizeX, LIGHTGRAY);
         }
     }
-    if (gcenter) { /* central axis */
+    if (gcenter) { /* cartesian axis */
         int fontSizeAxis = 8;
-        DrawCircle(xcenter, HEIGHT - ycenter, 3, PURPLE);                           /* centro del plano */
+        DrawCircle(xcenter, HEIGHT - ycenter, 3, PURPLE);                                             /* center */
         DrawText("(0,0)", xcenter + 2, HEIGHT - ycenter + 2, fontSizeAxis, PURPLE);
 
-        DrawLine(0, (HEIGHT - ycenter), WIDTH, (HEIGHT - ycenter), PURPLE);         /* eje x */
-        DrawText("x",     xcenter + 1, 0, fontSizeAxis, PURPLE);
+        DrawLineEx((Vector2){0, HEIGHT - ycenter}, (Vector2){WIDTH, HEIGHT - ycenter}, 1.1f, PURPLE); /* x axis */
+        DrawText("x", xcenter + 2, 0, fontSizeAxis, PURPLE);
 
-        DrawLine(xcenter, 0, xcenter, HEIGHT, PURPLE);                              /* eje y */
-        DrawText("y",     WIDTH - (WIDTH - CONFIG_WIDTH) - fontSizeAxis, HEIGHT - ycenter, fontSizeAxis, PURPLE);
+        DrawLineEx((Vector2){xcenter, 0}, (Vector2){xcenter, HEIGHT}, 1.1f, PURPLE);                  /* y axis */
+        DrawText("y", WIDTH - (WIDTH - CONFIG_WIDTH) - fontSizeAxis, HEIGHT - ycenter, fontSizeAxis, PURPLE);
     }
 }
 
