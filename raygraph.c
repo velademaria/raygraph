@@ -25,28 +25,38 @@ NormalizeVector2(Vector2 vector)
 void
 CartesianPlane()
 {
-    /* ejes y */
-    if (yaxis) {
-        for (float i = HEIGHT - ycenter; i > 0; i -= gap*yescalate) {
+    if (yaxis) { /* ejes y */
+        int fontSizeY = 10;
+        for (float i = HEIGHT - ycenter, j = gap; i > 0; i -= gap*yescalate, j += gap) {
             DrawLine(0, i, WIDTH, i, LIGHTGRAY);
+            if (yescalate >= 3 || gap >= 30) DrawText(TextFormat("%.0f", j), WIDTH - (WIDTH - CONFIG_WIDTH) - 16, i - gap*yescalate, fontSizeY, LIGHTGRAY);
         }
-        for (float i = HEIGHT - ycenter; i < HEIGHT; i += gap*yescalate) {
+        for (float i = HEIGHT - ycenter, j = (-1)*gap; i < HEIGHT; i += gap*yescalate, j -= gap) {
             DrawLine(0, i, WIDTH, i, LIGHTGRAY);
+            if (yescalate >= 3 || gap >= 30) DrawText(TextFormat("%.0f", j), WIDTH - (WIDTH - CONFIG_WIDTH) - 21, i + gap*yescalate, fontSizeY, LIGHTGRAY);
         }
     }
-    /* ejes x */
-    if (xaxis) {
-        for (float i = xcenter; i < WIDTH; i += gap*xescalate) {
+    if (xaxis) { /* ejes x */
+        int fontSizeX = 10;
+        for (float i = xcenter, j = gap; i < WIDTH; i += gap*xescalate, j += gap) {
             DrawLine(i, 0, i, HEIGHT, LIGHTGRAY);
+            if (xescalate >= 3 || gap >= 30) DrawText(TextFormat("%.0f", j), i + gap*xescalate + 1, 0, fontSizeX, LIGHTGRAY);
         }
-        for (float i = xcenter; i > 0; i -= gap*xescalate) {
+        for (float i = xcenter, j = (-1)*gap; i > 0; i -= gap*xescalate, j -= gap) {
             DrawLine(i, 0, i, HEIGHT, LIGHTGRAY);
+            if (xescalate >= 3 || gap >= 30) DrawText(TextFormat("%.0f", j), i - gap*xescalate + 1, 0, fontSizeX, LIGHTGRAY);
         }
     }
-    if (gcenter) {
-        DrawCircle(xcenter, (HEIGHT - ycenter), 3, PURPLE);                  /* centro del plano */
-        DrawLine(0, (HEIGHT - ycenter), WIDTH, (HEIGHT - ycenter), PURPLE);  /* eje x */
-        DrawLine(xcenter, 0, xcenter, HEIGHT, PURPLE);                       /* eje y */
+    if (gcenter) { /* central axis */
+        int fontSizeAxis = 8;
+        DrawCircle(xcenter, HEIGHT - ycenter, 3, PURPLE);                           /* centro del plano */
+        DrawText("(0,0)", xcenter + 2, HEIGHT - ycenter + 2, fontSizeAxis, PURPLE);
+
+        DrawLine(0, (HEIGHT - ycenter), WIDTH, (HEIGHT - ycenter), PURPLE);         /* eje x */
+        DrawText("x",     xcenter + 1, 0, fontSizeAxis, PURPLE);
+
+        DrawLine(xcenter, 0, xcenter, HEIGHT, PURPLE);                              /* eje y */
+        DrawText("y",     WIDTH - (WIDTH - CONFIG_WIDTH) - fontSizeAxis, HEIGHT - ycenter, fontSizeAxis, PURPLE);
     }
 }
 
