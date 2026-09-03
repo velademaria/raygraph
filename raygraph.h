@@ -14,6 +14,7 @@
 #endif
 
 #define CONFIG_WIDTH 1060
+#define DIFFERENCE (WIDTH - (WIDTH - CONFIG_WIDTH))
 
 extern float yescalate;
 extern float xescalate;
