@@ -12,6 +12,7 @@ int main()
         lesqrt[x1].y = powf(x2, 2);
     }
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(WIDTH, HEIGHT, "sqrt");
     SetTargetFPS(FPS);
     Vector2 lesqrtc[POINTS];

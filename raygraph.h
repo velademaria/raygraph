@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
+#include <time.h>
 
 #ifndef WIDTH
 #define WIDTH 1280
@@ -27,6 +28,8 @@ extern bool  gcenter;
 
 /* Reajusta la función a un sistema de corrdenadas respecto al centro XCENTER y YCENTER. */
 Vector2 NormalizeVector2(Vector2 vector);
+
+void MouseZoom(void);
 
 /* Dibuja un plano cartesiano con divisiones de acuerdo a la variable gap.            */
 /* Tambien dibuja los ejes principales respecto al centro dado con XCENTER y YCENTER. */

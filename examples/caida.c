@@ -31,6 +31,7 @@ int main()
         printf("Va = %5.5f; Vn = %5.5f; Iteración = %d; Error absoluto = %5.5f; Error relativo = %5.5f; Error porcentual = %5.5f%%\n", va[t].y, vnn[t].y, t+1, e_a[t], e_r[t], e_p[t]);
     }
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(WIDTH, HEIGHT, "caida");
     SetTargetFPS(FPS);
     Vector2 vnnc[POINTS];
@@ -40,7 +41,7 @@ int main()
             vnnc[t] = NormalizeVector2(vnn[t]);
             vac[t]  = NormalizeVector2(va[t]);
         }
-        
+
         BeginDrawing();
             ClearBackground(WHITE);
             CartesianPlane();
@@ -48,6 +49,7 @@ int main()
             DrawSplineLinear(vac, POINTS, 2.0f, BLUE);
             CartesianGUI();
         EndDrawing();
+        MouseZoom();            
     }
     CloseWindow();
 

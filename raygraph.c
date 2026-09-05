@@ -23,6 +23,13 @@ NormalizeVector2(Vector2 vector)
 }
 
 void
+MouseZoom()
+{
+    xescalate += (xescalate <= 10.0f && xescalate >= 1.0f) ? GetMouseWheelMove()*0.1f : 0.0f;
+    yescalate += (yescalate <= 10.0f && yescalate >= 1.0f) ? GetMouseWheelMove()*0.1f : 0.0f;
+}
+
+void
 CartesianPlane()
 {
     if (yaxis) { /* y axis */
@@ -56,7 +63,7 @@ CartesianPlane()
         DrawText("x", xcenter + 2, 0, fontSizeAxis, PURPLE);
 
         DrawLineEx((Vector2){xcenter, 0}, (Vector2){xcenter, HEIGHT}, 1.1f, PURPLE);                  /* y axis */
-        DrawText("y", DIFFERENCE - fontSizeAxis, HEIGHT - ycenter, fontSizeAxis, PURPLE);
+        DrawText("y", DIFFERENCE - fontSizeAxis, HEIGHT - ycenter - fontSizeAxis*2, fontSizeAxis, PURPLE);
     }
 }
 
@@ -86,5 +93,5 @@ CartesianGUI()
     GuiCheckBox((Rectangle){ 1120, 220, 20, 20 }, "Y Axis", &yaxis);
     GuiCheckBox((Rectangle){ 1120, 250, 20, 20 }, "Center", &gcenter);
 
-    /* TODO: Panel de control para derivada e integral */    
+    /* TODO: Panel de control para derivada e integral */
 }
