@@ -12,6 +12,10 @@ bool  xaxis      = true;
 bool  yaxis      = true;
 bool  gcenter    = true;
 
+Vector2 center = (Vector2){ (float)DIFFERENCE/2.0f, (float)HEIGHT/2.0f };
+Vector2 scale  = (Vector2){ 1.0f, 1.0f };
+Vector2 gaps    = (Vector2){ 10.0f, 10.0f };
+
 Vector2
 NormalizeVector2(Vector2 vector)
 {
@@ -25,8 +29,63 @@ NormalizeVector2(Vector2 vector)
 void
 MouseZoom()
 {
-    xescalate += (xescalate <= 10.0f && xescalate >= 1.0f) ? GetMouseWheelMove()*0.1f : 0.0f;
-    yescalate += (yescalate <= 10.0f && yescalate >= 1.0f) ? GetMouseWheelMove()*0.1f : 0.0f;
+    if (GetMouseWheelMove() == 1) {
+        xescalate += (10.0f > xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+        yescalate += (10.0f > yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+    }
+    if (GetMouseWheelMove() == -1) {
+        xescalate += (1.0f < xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+        yescalate += (1.0f < yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+    }
+}
+
+void
+LeKeys()
+{
+    if (IsKeyPressed(KEY_R)) {
+        yescalate  = 1;
+        xescalate  = 1;
+        xcenter    = DIFFERENCE/2;
+        ycenter    = HEIGHT/2;
+        gap        = 10;
+        xaxis      = true;
+        yaxis      = true;
+        gcenter    = true;
+    }
+
+    if (IsKeyPressed(KEY_C)) {
+        xcenter = DIFFERENCE/2;
+        ycenter = HEIGHT/2;
+    }
+
+    if (IsKeyPressed(KEY_ONE)) {
+        xcenter = 0;
+        ycenter = 0;
+    }
+
+    if (IsKeyPressed(KEY_TWO)) {
+        xcenter = DIFFERENCE;
+        ycenter = 0;
+    }
+
+    if (IsKeyPressed(KEY_THREE)) {
+        xcenter = DIFFERENCE;
+        ycenter = HEIGHT;
+    }
+
+    if (IsKeyPressed(KEY_FOUR)) {
+        xcenter = 0;
+        ycenter = HEIGHT;
+    }
+}
+
+void
+DragPlane()
+{
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        xcenter += (GetMouseX() > xcenter) ? 5.0f : -5.0f;
+        ycenter += (GetMouseY() > HEIGHT - ycenter) ? -5.0f : 5.0f;
+    }
 }
 
 void

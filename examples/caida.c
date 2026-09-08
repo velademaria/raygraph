@@ -47,9 +47,11 @@ int main()
             CartesianPlane();
             DrawSplineLinear(vnnc, POINTS, 2.0f, RED);
             DrawSplineLinear(vac, POINTS, 2.0f, BLUE);
+            DragPlane();
             CartesianGUI();
         EndDrawing();
-        MouseZoom();            
+        MouseZoom();
+        LeKeys();
     }
     CloseWindow();
 

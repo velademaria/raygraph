@@ -26,10 +26,18 @@ extern bool  xaxis;
 extern bool  yaxis;
 extern bool  gcenter;
 
+extern Vector2 center;
+extern Vector2 scale;
+extern Vector2 gaps;
+
 /* Reajusta la función a un sistema de corrdenadas respecto al centro XCENTER y YCENTER. */
 Vector2 NormalizeVector2(Vector2 vector);
 
 void MouseZoom(void);
+
+void LeKeys(void);
+
+void DragPlane(void);
 
 /* Dibuja un plano cartesiano con divisiones de acuerdo a la variable gap.            */
 /* Tambien dibuja los ejes principales respecto al centro dado con XCENTER y YCENTER. */
