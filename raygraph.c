@@ -8,13 +8,17 @@ float xescalate  = 1;
 float xcenter    = DIFFERENCE/2;
 float ycenter    = HEIGHT/2;
 float gap        = 10;
+int   check      = 0;
 bool  xaxis      = true;
 bool  yaxis      = true;
 bool  gcenter    = true;
+bool  mouse      = true;
 
 Vector2 center = (Vector2){ (float)DIFFERENCE/2.0f, (float)HEIGHT/2.0f };
 Vector2 scale  = (Vector2){ 1.0f, 1.0f };
-Vector2 gaps    = (Vector2){ 10.0f, 10.0f };
+Vector2 gaps   = (Vector2){ 10.0f, 10.0f };
+Vector2 difference = (Vector2){ 0.0f, 0.0f };
+Vector2 vchecks[2] = {0};
 
 Vector2
 NormalizeVector2(Vector2 vector)
@@ -26,14 +30,49 @@ NormalizeVector2(Vector2 vector)
     return vn;
 }
 
+/* void
+CheckPoints()
+{
+    if (IsKeyPressed(KEY_S) && checks <= CHECK_LIMIT) {
+        vchecks[check] = 
+    } else {
+        DrawText("(0,0)", xcenter + 2, HEIGHT - ycenter + 2, fontSizeAxis, PURPLE);          }
+} */
+
+bool
+IsInControlPanel(float x)
+{
+    if (x >= DIFFERENCE)
+        return false;
+    else
+        return true;
+}
+
+void
+FollowMouse()
+{
+    if(mouse && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        difference.x = GetMouseX() - xcenter;
+        difference.y = HEIGHT - GetMouseY() - ycenter;
+    }
+    if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        mouse = false;
+        if (IsInControlPanel(GetMouseX())) {
+            xcenter = GetMouseX() - difference.x;
+            ycenter = HEIGHT - GetMouseY() - difference.y;
+        }
+    } else {
+        mouse = true;
+    }
+}
+
 void
 MouseZoom()
 {
     if (GetMouseWheelMove() == 1) {
-        xescalate += (10.0f > xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
-        yescalate += (10.0f > yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
-    }
-    if (GetMouseWheelMove() == -1) {
+        xescalate += (20.0f > xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+        yescalate += (20.0f > yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+    } else {
         xescalate += (1.0f < xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
         yescalate += (1.0f < yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
     }
@@ -76,15 +115,6 @@ LeKeys()
     if (IsKeyPressed(KEY_FOUR)) {
         xcenter = 0;
         ycenter = HEIGHT;
-    }
-}
-
-void
-DragPlane()
-{
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        xcenter += (GetMouseX() > xcenter) ? 5.0f : -5.0f;
-        ycenter += (GetMouseY() > HEIGHT - ycenter) ? -5.0f : 5.0f;
     }
 }
 
@@ -142,10 +172,10 @@ CartesianGUI()
     DrawLine(CONFIG_WIDTH, 0, CONFIG_WIDTH, GetScreenHeight(), (Color){ 218, 218, 218, 255 });
     DrawRectangle(CONFIG_WIDTH, 0, GetScreenWidth(), GetScreenHeight(), (Color){ 232, 232, 232, 255 });
 
-    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", xescalate), &xescalate, 0.1f,  10.0f);
-    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", yescalate), &yescalate, 0.1f,  10.0f);
-    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", xcenter),   &xcenter,   0.0f,  DIFFERENCE);
-    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", ycenter),   &ycenter,   0.0f,  HEIGHT);
+    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", xescalate), &xescalate, 0.1f,  (float)XSCALE_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", yescalate), &yescalate, 0.1f,  (float)YSCALE_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", xcenter),   &xcenter,   -DIFFERENCE*2, DIFFERENCE*3);
+    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", ycenter),   &ycenter,   -HEIGHT*2,     HEIGHT*3);
     GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "Gap",      TextFormat("%.1f", gap),       &gap,       10.0f, 50.0f);
 
     GuiCheckBox((Rectangle){ 1120, 190, 20, 20 }, "X Axis", &xaxis);

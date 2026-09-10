@@ -37,6 +37,7 @@ int main()
     Vector2 vnnc[POINTS];
     Vector2 vac[POINTS];
     while (!WindowShouldClose()) {
+        FollowMouse();
         for (int t = 0; t < POINTS; ++t) {
             vnnc[t] = NormalizeVector2(vnn[t]);
             vac[t]  = NormalizeVector2(va[t]);
@@ -47,7 +48,6 @@ int main()
             CartesianPlane();
             DrawSplineLinear(vnnc, POINTS, 2.0f, RED);
             DrawSplineLinear(vac, POINTS, 2.0f, BLUE);
-            DragPlane();
             CartesianGUI();
         EndDrawing();
         MouseZoom();

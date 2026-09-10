@@ -17,6 +17,10 @@
 #define CONFIG_WIDTH 1060
 #define DIFFERENCE (WIDTH - (WIDTH - CONFIG_WIDTH))
 
+#define CHECK_LIMIT 2
+#define XSCALE_LIMIT 20
+#define YSCALE_LIMIT 20
+
 extern float yescalate;
 extern float xescalate;
 extern float xcenter;
@@ -37,7 +41,7 @@ void MouseZoom(void);
 
 void LeKeys(void);
 
-void DragPlane(void);
+void FollowMouse(void);
 
 /* Dibuja un plano cartesiano con divisiones de acuerdo a la variable gap.            */
 /* Tambien dibuja los ejes principales respecto al centro dado con XCENTER y YCENTER. */
