@@ -17,10 +17,11 @@ int main()
     SetTargetFPS(FPS);
     Vector2 lesqrtc[POINTS];
     while (!WindowShouldClose()) {
-        for (int x = 0; x < POINTS; ++x) {
-            lesqrtc[x]  = NormalizeVector2(lesqrt[x]);
-        }
-        
+        NormalizeVector2(lesqrt, lesqrtc, POINTS);
+        FollowMouse();
+        MouseZoom();
+        LeKeys();
+
         BeginDrawing();
             ClearBackground(WHITE);
             CartesianPlane();

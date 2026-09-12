@@ -37,11 +37,11 @@ int main()
     Vector2 vnnc[POINTS];
     Vector2 vac[POINTS];
     while (!WindowShouldClose()) {
+        NormalizeVector2(vnn, vnnc, POINTS);
+        NormalizeVector2(va, vac, POINTS);
         FollowMouse();
-        for (int t = 0; t < POINTS; ++t) {
-            vnnc[t] = NormalizeVector2(vnn[t]);
-            vac[t]  = NormalizeVector2(va[t]);
-        }
+        CheckPoints();
+        LeKeys();
 
         BeginDrawing();
             ClearBackground(WHITE);
@@ -51,7 +51,6 @@ int main()
             CartesianGUI();
         EndDrawing();
         MouseZoom();
-        LeKeys();
     }
     CloseWindow();
 

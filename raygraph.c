@@ -3,41 +3,64 @@
 #include "raygui.h"
 #include "raygraph.h"
 
-float yescalate  = 1;
-float xescalate  = 1;
-float xcenter    = DIFFERENCE/2;
-float ycenter    = HEIGHT/2;
-float gap        = 10;
+char *Hagen = "Brandon Arturo Lemus Ramons";
+
 int   check      = 0;
+bool  toggle     = true;
 bool  xaxis      = true;
 bool  yaxis      = true;
 bool  gcenter    = true;
 bool  mouse      = true;
 
 Vector2 center = (Vector2){ (float)DIFFERENCE/2.0f, (float)HEIGHT/2.0f };
-Vector2 scale  = (Vector2){ 1.0f, 1.0f };
-Vector2 gaps   = (Vector2){ 10.0f, 10.0f };
+Vector2 scale  = (Vector2){ XSCALE_INIT, YSCALE_INIT };
+Vector2 gap    = (Vector2){ GAP_INIT, GAP_INIT };
 Vector2 difference = (Vector2){ 0.0f, 0.0f };
-Vector2 vchecks[2] = {0};
+Checkpoint checkpoints[2] = {0};
 
-Vector2
-NormalizeVector2(Vector2 vector)
+void
+NormalizeVector2(Vector2 *vector_raw, Vector2 *vector_norm, int points)
 {
-    Vector2 vn = vector;
-    vn.x = (vn.x)*xescalate + xcenter;
-    vn.y = HEIGHT - (vn.y)*yescalate - ycenter;
-
-    return vn;
+    for (int i = 0; i < points; ++i) {
+        vector_norm[i].x = vector_raw[i].x*scale.x + center.x;
+        vector_norm[i].y = HEIGHT - vector_raw[i].y*scale.y - center.y;
+    }
 }
 
-/* void
+void
 CheckPoints()
 {
-    if (IsKeyPressed(KEY_S) && checks <= CHECK_LIMIT) {
-        vchecks[check] = 
-    } else {
-        DrawText("(0,0)", xcenter + 2, HEIGHT - ycenter + 2, fontSizeAxis, PURPLE);          }
-} */
+    if (IsKeyPressed(KEY_S)) {
+        switch (check) {
+        case 0:
+        case 1:
+            checkpoints[check].center = center;
+            checkpoints[check].gap    = gap;
+            checkpoints[check].diff   = difference;
+            checkpoints[check].scale  = scale;
+            check++;
+            break;
+        case 2:
+            check = 0;
+            break;
+        }
+    }
+    if (IsKeyPressed(KEY_T) && check == 2) {
+        toggle = !toggle;
+        if (toggle == true) {
+            center     = checkpoints[1].center;
+            gap        = checkpoints[1].gap;
+            difference = checkpoints[1].diff;
+            scale      = checkpoints[1].scale;
+        }
+        if (toggle == false) {
+            center     = checkpoints[0].center;
+            gap        = checkpoints[0].gap;
+            difference = checkpoints[0].diff;
+            scale      = checkpoints[0].scale;
+        }
+    }
+}
 
 bool
 IsInControlPanel(float x)
@@ -52,29 +75,25 @@ void
 FollowMouse()
 {
     if(mouse && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        difference.x = GetMouseX() - xcenter;
-        difference.y = HEIGHT - GetMouseY() - ycenter;
+        difference = (Vector2){ GetMouseX() - center.x, HEIGHT - GetMouseY() - center.y };
+        mouse = false;
     }
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        mouse = false;
         if (IsInControlPanel(GetMouseX())) {
-            xcenter = GetMouseX() - difference.x;
-            ycenter = HEIGHT - GetMouseY() - difference.y;
+            center = (Vector2){ GetMouseX() - difference.x, HEIGHT - GetMouseY() - difference.y };
         }
-    } else {
-        mouse = true;
-    }
+    } else mouse = true;
 }
 
 void
 MouseZoom()
 {
     if (GetMouseWheelMove() == 1) {
-        xescalate += (20.0f > xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
-        yescalate += (20.0f > yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.x += (XSCALE_LIMIT > scale.x) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.y += (XSCALE_LIMIT > scale.y) ? GetMouseWheelMove()*0.1f : 0.0f;
     } else {
-        xescalate += (1.0f < xescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
-        yescalate += (1.0f < yescalate) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.x += (1.0f < scale.x) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.y += (1.0f < scale.y) ? GetMouseWheelMove()*0.1f : 0.0f;
     }
 }
 
@@ -82,40 +101,18 @@ void
 LeKeys()
 {
     if (IsKeyPressed(KEY_R)) {
-        yescalate  = 1;
-        xescalate  = 1;
-        xcenter    = DIFFERENCE/2;
-        ycenter    = HEIGHT/2;
-        gap        = 10;
+        scale = (Vector2){ XSCALE_INIT, YSCALE_INIT };
+        center = (Vector2){ DIFFERENCE/2, HEIGHT/2 };
+        gap = (Vector2){ GAP_INIT, GAP_INIT };
         xaxis      = true;
         yaxis      = true;
         gcenter    = true;
     }
-
-    if (IsKeyPressed(KEY_C)) {
-        xcenter = DIFFERENCE/2;
-        ycenter = HEIGHT/2;
-    }
-
-    if (IsKeyPressed(KEY_ONE)) {
-        xcenter = 0;
-        ycenter = 0;
-    }
-
-    if (IsKeyPressed(KEY_TWO)) {
-        xcenter = DIFFERENCE;
-        ycenter = 0;
-    }
-
-    if (IsKeyPressed(KEY_THREE)) {
-        xcenter = DIFFERENCE;
-        ycenter = HEIGHT;
-    }
-
-    if (IsKeyPressed(KEY_FOUR)) {
-        xcenter = 0;
-        ycenter = HEIGHT;
-    }
+    if (IsKeyPressed(KEY_C))     center = (Vector2){ DIFFERENCE/2, HEIGHT/2 };
+    if (IsKeyPressed(KEY_ONE))   center = (Vector2){ 0.0f , 0.0f };
+    if (IsKeyPressed(KEY_TWO))   center = (Vector2){ DIFFERENCE, 0.0f };
+    if (IsKeyPressed(KEY_THREE)) center = (Vector2){ DIFFERENCE, HEIGHT };
+    if (IsKeyPressed(KEY_FOUR))  center = (Vector2){ 0.0f, HEIGHT };
 }
 
 void
@@ -123,36 +120,36 @@ CartesianPlane()
 {
     if (yaxis) { /* y axis */
         int fontSizeY = 10;
-        for (float i = HEIGHT - ycenter, j = gap; i > 0; i -= gap*yescalate, j += gap) {
+        for (float i = HEIGHT - center.y, j = gap.y; i > 0; i -= gap.y*scale.y, j += gap.y) {
             DrawLine(0, i, WIDTH, i, LIGHTGRAY);
-            if (yescalate*gap >= 30) DrawText(TextFormat("%.0f", j), DIFFERENCE - 16, i - gap*yescalate, fontSizeY, LIGHTGRAY);
+            if (scale.y*gap.y >= 30) DrawText(TextFormat("%.0f", j), DIFFERENCE - 16, i - gap.y*scale.y, fontSizeY, LIGHTGRAY);
         }
-        for (float i = HEIGHT - ycenter, j = (-1)*gap; i < HEIGHT; i += gap*yescalate, j -= gap) {
+        for (float i = HEIGHT - center.y, j = -gap.y; i < HEIGHT; i += gap.y*scale.y, j -= gap.y) {
             DrawLine(0, i, WIDTH, i, LIGHTGRAY);
-            if (yescalate*gap >= 30) DrawText(TextFormat("%.0f", j), DIFFERENCE - 21, i + gap*yescalate, fontSizeY, LIGHTGRAY);
+            if (scale.y*gap.y >= 30) DrawText(TextFormat("%.0f", j), DIFFERENCE - 21, i + gap.y*scale.y, fontSizeY, LIGHTGRAY);
         }
     }
     if (xaxis) { /* x axis */
         int fontSizeX = 10;
-        for (float i = xcenter, j = gap; i < WIDTH; i += gap*xescalate, j += gap) {
+        for (float i = center.x, j = gap.x; i < WIDTH; i += gap.x*scale.x, j += gap.x) {
             DrawLine(i, 0, i, HEIGHT, LIGHTGRAY);
-            if (xescalate*gap >= 30) DrawText(TextFormat("%.0f", j), i + gap*xescalate + 1, 0, fontSizeX, LIGHTGRAY);
+            if (scale.x*gap.x >= 30) DrawText(TextFormat("%.0f", j), i + gap.x*scale.x + 1, 0, fontSizeX, LIGHTGRAY);
         }
-        for (float i = xcenter, j = (-1)*gap; i > 0; i -= gap*xescalate, j -= gap) {
+        for (float i = center.x, j = -gap.x; i > 0; i -= gap.x*scale.x, j -= gap.x) {
             DrawLine(i, 0, i, HEIGHT, LIGHTGRAY);
-            if (xescalate*gap >= 30) DrawText(TextFormat("%.0f", j), i - gap*xescalate + 1, 0, fontSizeX, LIGHTGRAY);
+            if (scale.x*gap.x >= 30) DrawText(TextFormat("%.0f", j), i - gap.x*scale.x + 1, 0, fontSizeX, LIGHTGRAY);
         }
     }
     if (gcenter) { /* cartesian axis */
         int fontSizeAxis = 8;
-        DrawCircle(xcenter, HEIGHT - ycenter, 3, PURPLE);                                             /* center */
-        DrawText("(0,0)", xcenter + 2, HEIGHT - ycenter + 2, fontSizeAxis, PURPLE);
+        DrawCircle(center.x, HEIGHT - center.y, 3, PURPLE);                                             /* center */
+        DrawText("(0,0)", center.x + 2, HEIGHT - center.y + 2, fontSizeAxis, PURPLE);
 
-        DrawLineEx((Vector2){0, HEIGHT - ycenter}, (Vector2){WIDTH, HEIGHT - ycenter}, 1.1f, PURPLE); /* x axis */
-        DrawText("x", xcenter + 2, 0, fontSizeAxis, PURPLE);
+        DrawLineEx((Vector2){0, HEIGHT - center.y}, (Vector2){WIDTH, HEIGHT - center.y}, 1.1f, PURPLE); /* x axis */
+        DrawText("x", center.x + 2, 0, fontSizeAxis, PURPLE);
 
-        DrawLineEx((Vector2){xcenter, 0}, (Vector2){xcenter, HEIGHT}, 1.1f, PURPLE);                  /* y axis */
-        DrawText("y", DIFFERENCE - fontSizeAxis, HEIGHT - ycenter - fontSizeAxis*2, fontSizeAxis, PURPLE);
+        DrawLineEx((Vector2){center.x, 0}, (Vector2){center.x, HEIGHT}, 1.1f, PURPLE);                  /* y axis */
+        DrawText("y", DIFFERENCE - fontSizeAxis, HEIGHT - center.y - fontSizeAxis*2, fontSizeAxis, PURPLE);
     }
 }
 
@@ -172,15 +169,16 @@ CartesianGUI()
     DrawLine(CONFIG_WIDTH, 0, CONFIG_WIDTH, GetScreenHeight(), (Color){ 218, 218, 218, 255 });
     DrawRectangle(CONFIG_WIDTH, 0, GetScreenWidth(), GetScreenHeight(), (Color){ 232, 232, 232, 255 });
 
-    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", xescalate), &xescalate, 0.1f,  (float)XSCALE_LIMIT);
-    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", yescalate), &yescalate, 0.1f,  (float)YSCALE_LIMIT);
-    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", xcenter),   &xcenter,   -DIFFERENCE*2, DIFFERENCE*3);
-    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", ycenter),   &ycenter,   -HEIGHT*2,     HEIGHT*3);
-    GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "Gap",      TextFormat("%.1f", gap),       &gap,       10.0f, 50.0f);
+    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", scale.x),  &scale.x,  0.1f,          (float)XSCALE_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", scale.y),  &scale.y,  0.1f,          (float)YSCALE_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", center.x), &center.x, -DIFFERENCE*2, DIFFERENCE*3);
+    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", center.y), &center.y, -HEIGHT*2,     HEIGHT*3);
+    GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "X Gap",    TextFormat("%.1f", gap.x),    &gap.x,    10.0f,         50.0f);
+    GuiSliderBar((Rectangle){ 1120, 190, 120, 20}, "Y Gap",    TextFormat("%.1f", gap.y),    &gap.y,    10.0f,         50.0f);
 
-    GuiCheckBox((Rectangle){ 1120, 190, 20, 20 }, "X Axis", &xaxis);
-    GuiCheckBox((Rectangle){ 1120, 220, 20, 20 }, "Y Axis", &yaxis);
-    GuiCheckBox((Rectangle){ 1120, 250, 20, 20 }, "Center", &gcenter);
+    GuiCheckBox((Rectangle){ 1120, 220, 20, 20 }, "X Axis", &xaxis);
+    GuiCheckBox((Rectangle){ 1120, 250, 20, 20 }, "Y Axis", &yaxis);
+    GuiCheckBox((Rectangle){ 1120, 280, 20, 20 }, "Center", &gcenter);
 
     /* TODO: Panel de control para derivada e integral */
 }
