@@ -5,12 +5,12 @@
 
 char *Hagen = "Brandon Arturo Lemus Ramons";
 
-int   check      = 0;
-bool  toggle     = true;
-bool  xaxis      = true;
-bool  yaxis      = true;
-bool  gcenter    = true;
-bool  mouse      = true;
+int   check   = 0;
+bool  toggle  = true;
+bool  xaxis   = true;
+bool  yaxis   = true;
+bool  gcenter = true;
+bool  mouse   = true;
 
 Vector2 center = (Vector2){ (float)DIFFERENCE/2.0f, (float)HEIGHT/2.0f };
 Vector2 scale  = (Vector2){ XSCALE_INIT, YSCALE_INIT };
@@ -101,9 +101,9 @@ void
 LeKeys()
 {
     if (IsKeyPressed(KEY_R)) {
-        scale = (Vector2){ XSCALE_INIT, YSCALE_INIT };
+        scale  = (Vector2){ XSCALE_INIT, YSCALE_INIT };
         center = (Vector2){ DIFFERENCE/2, HEIGHT/2 };
-        gap = (Vector2){ GAP_INIT, GAP_INIT };
+        gap    = (Vector2){ GAP_INIT, GAP_INIT };
         xaxis      = true;
         yaxis      = true;
         gcenter    = true;
@@ -140,7 +140,7 @@ CartesianPlane()
             if (scale.x*gap.x >= 30) DrawText(TextFormat("%.0f", j), i - gap.x*scale.x + 1, 0, fontSizeX, LIGHTGRAY);
         }
     }
-    if (gcenter) { /* cartesian axis */
+    if (gcenter) { /* central axis */
         int fontSizeAxis = 8;
         DrawCircle(center.x, HEIGHT - center.y, 3, PURPLE);                                             /* center */
         DrawText("(0,0)", center.x + 2, HEIGHT - center.y + 2, fontSizeAxis, PURPLE);
@@ -161,6 +161,9 @@ Derivative()
 
 void
 Integral()
+
+void
+Input()
 */
 
 void

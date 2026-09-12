@@ -63,14 +63,18 @@ extern Vector2 difference;
 /* Reajusta la función a un sistema de corrdenadas respecto al centro XCENTER y YCENTER. */
 void NormalizeVector2(Vector2 *vector, Vector2 *vn, int points);
 
+/* Hacer zoom con la rueda del mouse */
 void MouseZoom(void);
 
+/* Teclas para cambiar a un cuadrante del plano, o volver al centro */
 void LeKeys(void);
 
 bool IsInControlPanel(float x);
 
+/* Arrastre del plano con el click izquierdo del mouse */
 void FollowMouse(void);
 
+/* Guarda dos posiciones, junto con sus proporciones, en dos puntos, y permite el cambio de una a otra */
 void CheckPoints(void);
 
 /* Dibuja un plano cartesiano con divisiones de acuerdo a la variable gap.            */
@@ -81,4 +85,3 @@ void CartesianPlane(void);
 void CartesianGUI(void);
 
 #endif // RAYGRAPH_H
-
