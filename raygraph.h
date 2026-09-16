@@ -61,7 +61,7 @@ extern Vector2 gap;
 extern Vector2 difference;
 
 /* Reajusta la función a un sistema de corrdenadas respecto al centro XCENTER y YCENTER. */
-void NormalizeVector2(Vector2 *vector, Vector2 *vn, int points);
+void NormalizeVector2(Vector2 *vector_raw, Vector2 *vector_norm, int points);
 
 /* Hacer zoom con la rueda del mouse */
 void MouseZoom(void);
