@@ -1,5 +1,6 @@
-#include <math.h>
+#define RAYGRAPH_IMPLEMENTATION
 #include "../raygraph.h"
+#include <math.h>
 
 #define FPS 60
 #define POINTS 500

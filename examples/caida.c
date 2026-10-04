@@ -5,19 +5,18 @@
 
 #define FPS 60
 #define POINTS 1000
-#define E 2.71828F
 
 int main()
 {
-    Vector2 vnn[POINTS];              /* valores de velocidad numérica n+1 */
-    Vector2 va[POINTS];               /* valores de velocidad analítica    */
-    float vn = 0;                     /* velocidad numérica n, valor temp  */    
-    const float g = 9.81f;            /* gravedad */
-    const float beta_masa = 0.125f;   /* resultado de beta/masa, donde beta es la viscosidas del medio (aire) */
-    const float mg_beta = 78.48f;     /* resultado de masa*gravedad/beta */
-    float e_a[POINTS];                /* valores de error absoluto       */
-    float e_r[POINTS];                /* valores de error relativo       */
-    float e_p[POINTS];                /* valores de error porcentual     */
+    Vector2 vnn[POINTS];              /* Valores de velocidad numérica n+1. */
+    Vector2 va[POINTS];               /* Valores de velocidad analítica.    */
+    float vn = 0;                     /* Velocidad numérica n, valor temp.  */    
+    const float g = 9.81f;            /* Gravedad. */
+    const float beta_masa = 0.125f;   /* Resultado de beta/masa, donde beta es la viscosidas del medio (aire). */
+    const float mg_beta = 78.48f;     /* Resultado de masa*gravedad/beta. */
+    float e_a[POINTS];                /* Valores de error absoluto.       */
+    float e_r[POINTS];                /* Valores de error relativo.       */
+    float e_p[POINTS];                /* Valores de error porcentual.     */
     vnn[0] = (Vector2){0, 0};
     va[0]  = (Vector2){0, 0};
     for (int t = 1; t < POINTS; ++t) {
@@ -25,7 +24,7 @@ int main()
         va[t].x = t;
         vnn[t].y = vn + (g - (beta_masa*vn));
         vn = vnn[t].y;
-        va[t].y = mg_beta*(1 - powf(E, -1*beta_masa*(t)));
+        va[t].y = mg_beta*(1 - expf(-1*beta_masa*(t)));
         e_a[t] = fabsf(va[t].y - vnn[t].y);
         e_r[t] = fabsf(e_a[t]/va[t].y);
         e_p[t] = fabs(e_r[t]*100);
@@ -33,7 +32,7 @@ int main()
     }
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(WIDTH, HEIGHT, "caida");
+    InitWindow(WIDTH, HEIGHT, "Caída");
     SetTargetFPS(FPS);
     Vector2 vnnc[POINTS];
     Vector2 vac[POINTS];

@@ -2,6 +2,7 @@
 #define RAYGRAPH_H_
 
 #define RAYGUI_IMPLEMENTATION
+
 #include <raylib.h>
 #include <raymath.h>
 #include "raygui.h"
@@ -14,21 +15,37 @@
 #define HEIGHT (WIDTH*0.5625)
 #define CANVAS_WIDTH (WIDTH*0.8)
 
-#ifndef XSCALE_LIMIT
-#define XSCALE_LIMIT 20.0f
-#endif // XSCALE_LIMIT
+#ifndef XSCALE_UPPER_LIMIT
+#define XSCALE_UPPER_LIMIT 20.0f
+#endif // XSCALE_UPPER_LIMIT
+
+#ifndef YSCALE_UPPER_LIMIT
+#define YSCALE_UPPER_LIMIT 20.0f
+#endif // YSCALE_UPPER_LIMIT
+
+#ifndef XSCALE_LOWER_LIMIT
+#define XSCALE_LOWER_LIMIT 0.1f
+#endif // XSCALE_LOWER_LIMIT
+
+#ifndef YSCALE_LOWER_LIMIT
+#define YSCALE_LOWER_LIMIT 0.1f
+#endif // YSCALE_LOWER_LIMIT
 
 #ifndef XSCALE_INIT
 #define XSCALE_INIT 1.0f
 #endif // XSCALE_INIT
 
-#ifndef YSCALE_LIMIT
-#define YSCALE_LIMIT 20.0f
-#endif // YSCALE_LIMIT
-
 #ifndef YSCALE_INIT
 #define YSCALE_INIT 1.0f
 #endif // YSCALE_INIT
+
+#ifndef GAP_LOWER_LIMIT
+#define GAP_LOWER_LIMIT 10.0f
+#endif // GAP_LOWER_LIMIT
+
+#ifndef GAP_UPPER_LIMIT
+#define GAP_UPPER_LIMIT 50.0f
+#endif // GAP_UPPER_LIMIT
 
 #ifndef GAP_INIT
 #define GAP_INIT 10.0f
@@ -61,6 +78,8 @@ void FollowMouse(void);
 void CheckPoints(void);
 void CartesianPlane(void);
 void CartesianGUI(void);
+void FullInteraction2(void);
+void FullPlane2(void);
 
 #endif // RAYGRAPH_H_
 
@@ -152,8 +171,8 @@ void
 MouseZoom()
 {
     if (GetMouseWheelMove()) {
-        scale.x += (XSCALE_LIMIT > scale.x) ? GetMouseWheelMove()*0.1f : 0.0f;
-        scale.y += (XSCALE_LIMIT > scale.y) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.x += (XSCALE_UPPER_LIMIT > scale.x) ? GetMouseWheelMove()*0.1f : 0.0f;
+        scale.y += (XSCALE_UPPER_LIMIT > scale.y) ? GetMouseWheelMove()*0.1f : 0.0f;
     } else {
         scale.x += (1.0f < scale.x) ? GetMouseWheelMove()*0.1f : 0.0f;
         scale.y += (1.0f < scale.y) ? GetMouseWheelMove()*0.1f : 0.0f;
@@ -235,12 +254,12 @@ CartesianGUI()
     DrawLine(CANVAS_WIDTH, 0, CANVAS_WIDTH, GetScreenHeight(), (Color){ 218, 218, 218, 255 });
     DrawRectangle(CANVAS_WIDTH, 0, GetScreenWidth(), GetScreenHeight(), (Color){ 232, 232, 232, 255 });
 
-    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", scale.x),  &scale.x,  0.1f,            (float)XSCALE_LIMIT);
-    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", scale.y),  &scale.y,  0.1f,            (float)YSCALE_LIMIT);
-    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", center.x), &center.x, -CANVAS_WIDTH*2, CANVAS_WIDTH*3);
-    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", center.y), &center.y, -HEIGHT*2,       HEIGHT*3);
-    GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "X Gap",    TextFormat("%.1f", gap.x),    &gap.x,    10.0f,           50.0f);
-    GuiSliderBar((Rectangle){ 1120, 190, 120, 20}, "Y Gap",    TextFormat("%.1f", gap.y),    &gap.y,    10.0f,           50.0f);
+    GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", scale.x),  &scale.x,  XSCALE_LOWER_LIMIT, XSCALE_UPPER_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", scale.y),  &scale.y,  YSCALE_LOWER_LIMIT, YSCALE_UPPER_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", center.x), &center.x, -CANVAS_WIDTH*2,    CANVAS_WIDTH*3);
+    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", center.y), &center.y, -HEIGHT*2,          HEIGHT*3);
+    GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "X Gap",    TextFormat("%.1f", gap.x),    &gap.x,    GAP_LOWER_LIMIT,    GAP_UPPER_LIMIT);
+    GuiSliderBar((Rectangle){ 1120, 190, 120, 20}, "Y Gap",    TextFormat("%.1f", gap.y),    &gap.y,    GAP_LOWER_LIMIT,    GAP_UPPER_LIMIT);
 
     GuiCheckBox((Rectangle){ 1120, 220, 20, 20 }, "X Axis", &xaxis);
     GuiCheckBox((Rectangle){ 1120, 250, 20, 20 }, "Y Axis", &yaxis);
@@ -248,4 +267,22 @@ CartesianGUI()
 
     /* TODO: Panel de control para derivada e integral */
 }
+
+void
+FullInteraction2(void)
+{
+    FollowMouse();
+    CheckPoints();
+    LeKeys();
+    MouseZoom();
+}
+
+void
+FullPlane2(void)
+{
+    ClearBackground(WHITE);
+    CartesianPlane();
+    CartesianGUI();
+}
+
 #endif // RAYGRAPH_IMPLEMENTATION
