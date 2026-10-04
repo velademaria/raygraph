@@ -1,4 +1,4 @@
-#define RAYGRAPH_IMPLEMENTATION 
+#define RAYGRAPH_IMPLEMENTATION_2
 #include "../raygraph.h"
 #include <math.h>
 #include <stdio.h>
@@ -39,18 +39,13 @@ int main()
     while (!WindowShouldClose()) {
         NormalizeVector2(vnn, vnnc, POINTS);
         NormalizeVector2(va, vac, POINTS);
-        FollowMouse();
-        CheckPoints();
-        LeKeys();
+        FullInteraction2();
 
         BeginDrawing();
-            ClearBackground(WHITE);
-            CartesianPlane();
+            FullPlane2();
             DrawSplineLinear(vnnc, POINTS, 2.0f, RED);
             DrawSplineLinear(vac, POINTS, 2.0f, BLUE);
-            CartesianGUI();
         EndDrawing();
-        MouseZoom();
     }
     CloseWindow();
 

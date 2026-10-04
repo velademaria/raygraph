@@ -76,14 +76,16 @@ void LeKeys(void);
 bool IsInCanvas(float x);
 void FollowMouse(void);
 void CheckPoints(void);
-void CartesianPlane(void);
-void CartesianGUI(void);
+void Plane2(void);
+void GUI2(void);
 void FullInteraction2(void);
 void FullPlane2(void);
 
+void NormalizeVector3(void);
+
 #endif // RAYGRAPH_H_
 
-#ifdef RAYGRAPH_IMPLEMENTATION
+#ifdef RAYGRAPH_IMPLEMENTATION_2
 
 char *Hagen = "Brandon Arturo Lemus Ramons";
 
@@ -198,7 +200,7 @@ LeKeys()
 }
 
 void
-CartesianPlane()
+Plane2()
 {
     if (yaxis) { /* y axis */
         int fontSizeY = 10;
@@ -249,15 +251,15 @@ Input()
 */
 
 void
-CartesianGUI()
+GUI2()
 {
     DrawLine(CANVAS_WIDTH, 0, CANVAS_WIDTH, GetScreenHeight(), (Color){ 218, 218, 218, 255 });
     DrawRectangle(CANVAS_WIDTH, 0, GetScreenWidth(), GetScreenHeight(), (Color){ 232, 232, 232, 255 });
 
     GuiSliderBar((Rectangle){ 1120, 40,  120, 20}, "X Scale",  TextFormat("%.1f", scale.x),  &scale.x,  XSCALE_LOWER_LIMIT, XSCALE_UPPER_LIMIT);
     GuiSliderBar((Rectangle){ 1120, 70,  120, 20}, "Y Scale",  TextFormat("%.1f", scale.y),  &scale.y,  YSCALE_LOWER_LIMIT, YSCALE_UPPER_LIMIT);
-    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", center.x), &center.x, -CANVAS_WIDTH*2,    CANVAS_WIDTH*3);
-    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", center.y), &center.y, -HEIGHT*2,          HEIGHT*3);
+    GuiSliderBar((Rectangle){ 1120, 100, 120, 20}, "X Center", TextFormat("%.1f", center.x), &center.x, -CANVAS_WIDTH*3,    CANVAS_WIDTH*3);
+    GuiSliderBar((Rectangle){ 1120, 130, 120, 20}, "Y center", TextFormat("%.1f", center.y), &center.y, -HEIGHT*3,          HEIGHT*3);
     GuiSliderBar((Rectangle){ 1120, 160, 120, 20}, "X Gap",    TextFormat("%.1f", gap.x),    &gap.x,    GAP_LOWER_LIMIT,    GAP_UPPER_LIMIT);
     GuiSliderBar((Rectangle){ 1120, 190, 120, 20}, "Y Gap",    TextFormat("%.1f", gap.y),    &gap.y,    GAP_LOWER_LIMIT,    GAP_UPPER_LIMIT);
 
@@ -281,8 +283,12 @@ void
 FullPlane2(void)
 {
     ClearBackground(WHITE);
-    CartesianPlane();
-    CartesianGUI();
+    Plane2();
+    GUI2();
 }
 
-#endif // RAYGRAPH_IMPLEMENTATION
+#endif // RAYGRAPH_IMPLEMENTATION_2
+
+#ifdef RAYGRAPH_IMPLEMENTATION_3
+
+#endif // RAYGRAPH_IMPLEMENTATION_3
